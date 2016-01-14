@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import org.mazhuang.cleanexpert.model.JunkGroup;
 import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.task.SysCacheScanTask;
 import org.mazhuang.cleanexpert.util.CleanUtil;
+import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,9 +33,12 @@ public class JunkCleanActivity extends AppCompatActivity {
     public static final int MSG_SYS_CACHE_POS = 0x1002;
     public static final int MSG_SYS_CACHE_FINISH = 0x1003;
 
+    public static final int MSG_SYS_CACHE_CLEAN_FINISH = 0x1100;
+
     private Handler handler;
 
-    private boolean isSysCacheFinish = false;
+    private boolean isSysCacheScanFinish = false;
+    private boolean isSysCacheCleanFinish = false;
 
     private boolean isScanning = false;
 
@@ -58,8 +63,12 @@ public class JunkCleanActivity extends AppCompatActivity {
                     case MSG_SYS_CACHE_POS:
                         break;
                     case MSG_SYS_CACHE_FINISH:
-                        isSysCacheFinish = true;
-                        checkFinish();
+                        isSysCacheScanFinish = true;
+                        checkScanFinish();
+                        break;
+                    case MSG_SYS_CACHE_CLEAN_FINISH:
+                        isSysCacheCleanFinish = true;
+                        checkCleanFinish();
                         break;
                 }
             }
@@ -76,8 +85,8 @@ public class JunkCleanActivity extends AppCompatActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 JunkInfo info = (JunkInfo)adapter.getChild(groupPosition, childPosition);
                 if (groupPosition == JunkGroup.GROUP_APK ||
-                        info.isChildItem() ||
-                        (groupPosition == JunkGroup.GROUP_ADV && !info.isChildItem() && info.path != null)) {
+                        info.isChild ||
+                        (groupPosition == JunkGroup.GROUP_ADV && !info.isChild && info.path != null)) {
                     if (info.path != null) {
                         Toast.makeText(JunkCleanActivity.this, info.path, Toast.LENGTH_SHORT).show();
                     }
@@ -85,7 +94,7 @@ public class JunkCleanActivity extends AppCompatActivity {
                     int childrenInThisGroup = adapter.getChildrenCount(groupPosition);
                     for (int i = childPosition + 1; i < childrenInThisGroup; i++) {
                         JunkInfo child = (JunkInfo)adapter.getChild(groupPosition, i);
-                        if (!child.isChildItem()) {
+                        if (!child.isChild) {
                             break;
                         }
 
@@ -180,7 +189,7 @@ public class JunkCleanActivity extends AppCompatActivity {
                     holder.junkTypeTv.setText(info.name);
                     holder.junkSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, info.size));
 
-                    if (info.isChildItem()) {
+                    if (info.isChild) {
                         convertView.setPadding(100, 0, 20, 0);
                         convertView.setBackgroundColor(Color.rgb(0xff, 0xff, 0xff));
                     } else {
@@ -203,35 +212,73 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
+        Button cleanBtn = (Button) findViewById(R.id.do_junk_clean);
+        cleanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll();
+            }
+        });
+
         if (!isScanning) {
             isScanning = true;
             startScan();
         }
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    private void clearAll() {
+        Thread clearThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CleanUtil.freeAllAppsCache(handler);
+            }
+        });
+        clearThread.start();
     }
 
     private void resetState() {
         isScanning = false;
 
-        isSysCacheFinish = false;
+        isSysCacheScanFinish = false;
+        isSysCacheCleanFinish = false;
 
         junkGroups = new Hashtable<>();
 
         JunkGroup cacheGroup = new JunkGroup();
-        cacheGroup.name = "缓存垃圾";
+        cacheGroup.name = ContextUtil.getString(R.string.system_cache);
         cacheGroup.children = new ArrayList<>();
         junkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
     }
 
-    private void checkFinish() {
-        if (isSysCacheFinish) {
+    private void checkScanFinish() {
+        if (isSysCacheScanFinish) {
             isScanning = false;
-            // TODO 更新界面，扫描完成
             Toast.makeText(this, "扫描完成", Toast.LENGTH_LONG).show();
+
+            JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
+            ArrayList<JunkInfo> children = cacheGroup.children;
+            cacheGroup.children = new ArrayList<>();
+            for (JunkInfo info : children) {
+                cacheGroup.children.add(info);
+                if (info.children != null) {
+                    cacheGroup.children.addAll(info.children);
+                }
+            }
+            children = null;
+
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void checkCleanFinish() {
+        if (isSysCacheCleanFinish) {
+            Toast.makeText(this, "清理完成", Toast.LENGTH_LONG).show();
+
+            JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
+            cacheGroup.size = 0L;
+            cacheGroup.children = null;
+
+            adapter.notifyDataSetChanged();
         }
     }
 

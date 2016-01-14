@@ -1,5 +1,8 @@
 package org.mazhuang.cleanexpert.model;
 
+import org.mazhuang.cleanexpert.R;
+import org.mazhuang.cleanexpert.util.ContextUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -11,19 +14,18 @@ public class JunkInfo implements Comparable<JunkInfo> {
     public String packageName;
     public String path;
     public ArrayList<JunkInfo> children;
-    public boolean isVisible;
-
-    public boolean isChildItem() {
-        return children == null;
-    }
+    public boolean isVisible = false;
+    public boolean isChild = true;
 
     @Override
     public int compareTo(JunkInfo another) {
-        if (this.name != null && this.name.equals("系统缓存")) {
+        String top = ContextUtil.getString(R.string.system_cache);
+
+        if (this.name != null && this.name.equals(top)) {
             return 1;
         }
 
-        if (another.name != null && another.name.equals("系统缓存")) {
+        if (another.name != null && another.name.equals(top)) {
             return -1;
         }
 

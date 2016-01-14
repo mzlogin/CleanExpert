@@ -344,41 +344,15 @@
 											"text": "+isVisible: boolean",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
-										}
-									],
-									"visible": true,
-									"enabled": true,
-									"lineColor": "#000000",
-									"fillColor": "#ffffff",
-									"fontColor": "#000000",
-									"font": "Arial;13;0",
-									"showShadow": true,
-									"containerChangeable": false,
-									"containerExtending": false,
-									"left": 392,
-									"top": 73,
-									"width": 192,
-									"height": 98,
-									"autoResize": false
-								},
-								{
-									"_type": "UMLOperationCompartmentView",
-									"_id": "AAAAAAFSNn0Rh0Sh6+w=",
-									"_parent": {
-										"$ref": "AAAAAAFSNn0RhkSa7H0="
-									},
-									"model": {
-										"$ref": "AAAAAAFSNn0RhESYRZk="
-									},
-									"subViews": [
+										},
 										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAFSPE4d8mE6nSA=",
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAFSPgfx2MJx2xI=",
 											"_parent": {
-												"$ref": "AAAAAAFSNn0Rh0Sh6+w="
+												"$ref": "AAAAAAFSNn0RhkSg9mM="
 											},
 											"model": {
-												"$ref": "AAAAAAFSPE4dr2E334w="
+												"$ref": "AAAAAAFSPgfxgMJuWww="
 											},
 											"visible": true,
 											"enabled": true,
@@ -390,12 +364,12 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 397,
-											"top": 176,
+											"top": 168,
 											"width": 182,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+isChild(): boolean",
+											"text": "+isChild: boolean",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										}
@@ -410,9 +384,33 @@
 									"containerChangeable": false,
 									"containerExtending": false,
 									"left": 392,
-									"top": 171,
+									"top": 73,
 									"width": 192,
-									"height": 23,
+									"height": 113,
+									"autoResize": false
+								},
+								{
+									"_type": "UMLOperationCompartmentView",
+									"_id": "AAAAAAFSNn0Rh0Sh6+w=",
+									"_parent": {
+										"$ref": "AAAAAAFSNn0RhkSa7H0="
+									},
+									"model": {
+										"$ref": "AAAAAAFSNn0RhESYRZk="
+									},
+									"visible": true,
+									"enabled": true,
+									"lineColor": "#000000",
+									"fillColor": "#ffffff",
+									"fontColor": "#000000",
+									"font": "Arial;13;0",
+									"showShadow": true,
+									"containerChangeable": false,
+									"containerExtending": false,
+									"left": 392,
+									"top": 186,
+									"width": 192,
+									"height": 10,
 									"autoResize": false
 								},
 								{
@@ -1002,9 +1000,9 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 265,
+									"left": 266,
 									"top": 92,
-									"width": 30,
+									"width": 29.275390625,
 									"height": 13,
 									"autoResize": false,
 									"alpha": 0.5235987755982988,
@@ -1102,9 +1100,9 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 351,
+									"left": 352,
 									"top": 92,
-									"width": 30,
+									"width": 29.275390625,
 									"height": 13,
 									"autoResize": false,
 									"alpha": -0.5235987755982988,
@@ -1326,7 +1324,7 @@
 											"containerExtending": false,
 											"left": -144,
 											"top": -192,
-											"width": 64,
+											"width": 64.32080078125,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1351,7 +1349,7 @@
 											"containerExtending": false,
 											"left": 61,
 											"top": 286,
-											"width": 208,
+											"width": 281.4296875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1376,7 +1374,7 @@
 											"containerExtending": false,
 											"left": -144,
 											"top": -192,
-											"width": 73,
+											"width": 73.67724609375,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1420,7 +1418,7 @@
 									"containerExtending": false,
 									"left": 56,
 									"top": 279,
-									"width": 218,
+									"width": 291.4296875,
 									"height": 25,
 									"autoResize": false,
 									"stereotypeLabel": {
@@ -1456,7 +1454,7 @@
 									"containerExtending": false,
 									"left": 56,
 									"top": 304,
-									"width": 218,
+									"width": 291.4296875,
 									"height": 10,
 									"autoResize": false
 								},
@@ -1490,7 +1488,7 @@
 											"containerExtending": false,
 											"left": 61,
 											"top": 319,
-											"width": 208,
+											"width": 281.4296875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1518,11 +1516,11 @@
 											"containerExtending": false,
 											"left": 61,
 											"top": 334,
-											"width": 208,
+											"width": 281.4296875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+onProgress(int, int, String): void",
+											"text": "+onProgress(total: int, pos: int, msg: String): void",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										},
@@ -1546,11 +1544,11 @@
 											"containerExtending": false,
 											"left": 61,
 											"top": 349,
-											"width": 208,
+											"width": 281.4296875,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+onFinish(): void",
+											"text": "+onFinish(items: ArrayList<JunkInfo>): void",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										}
@@ -1566,7 +1564,7 @@
 									"containerExtending": false,
 									"left": 56,
 									"top": 314,
-									"width": 218,
+									"width": 291.4296875,
 									"height": 53,
 									"autoResize": false
 								},
@@ -1630,7 +1628,7 @@
 							"containerExtending": false,
 							"left": 56,
 							"top": 256,
-							"width": 218,
+							"width": 291.4296875,
 							"height": 112,
 							"autoResize": false,
 							"stereotypeDisplay": "icon",
@@ -1783,39 +1781,25 @@
 							"isDerived": false,
 							"aggregation": "none",
 							"isID": false
-						}
-					],
-					"operations": [
+						},
 						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFSPE4dr2E334w=",
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAFSPgfxgMJuWww=",
 							"_parent": {
 								"$ref": "AAAAAAFSNn0RhESYRZk="
 							},
 							"name": "isChild",
+							"documentation": "isChild 为 true 表示第三级子项",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
-							"parameters": [
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFSPE5G32FHUOQ=",
-									"_parent": {
-										"$ref": "AAAAAAFSPE4dr2E334w="
-									},
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "boolean",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "return"
-								}
-							],
-							"concurrency": "sequential",
-							"isQuery": false,
-							"isAbstract": false
+							"type": "boolean",
+							"isReadOnly": false,
+							"isOrdered": false,
+							"isUnique": false,
+							"isDerived": false,
+							"aggregation": "none",
+							"isID": false
 						}
 					],
 					"isAbstract": false,
@@ -2000,10 +1984,11 @@
 									"_parent": {
 										"$ref": "AAAAAAFSO6SJ1MDuU7M="
 									},
-									"name": "int",
+									"name": "total",
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "int",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -2015,10 +2000,11 @@
 									"_parent": {
 										"$ref": "AAAAAAFSO6SJ1MDuU7M="
 									},
-									"name": "int",
+									"name": "pos",
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "int",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -2045,10 +2031,11 @@
 									"_parent": {
 										"$ref": "AAAAAAFSO6SJ1MDuU7M="
 									},
-									"name": "String",
+									"name": "msg",
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "String",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -2084,6 +2071,22 @@
 									"isOrdered": false,
 									"isUnique": false,
 									"direction": "return"
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAFSPgr+ncNJYes=",
+									"_parent": {
+										"$ref": "AAAAAAFSO6TE0MEiMeI="
+									},
+									"name": "items",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "ArrayList<JunkInfo>",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"direction": "in"
 								}
 							],
 							"concurrency": "sequential",

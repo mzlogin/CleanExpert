@@ -7,12 +7,15 @@ import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 
+import org.mazhuang.cleanexpert.R;
 import org.mazhuang.cleanexpert.callback.IScanCallback;
 import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.util.ContextUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,7 +64,11 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
                     .getMethod("getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
             getPackageSizeInfo.invoke(pm, packageName, observer);
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e ) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -78,17 +85,22 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
                 info.packageName = packageStats.packageName;
                 info.name = appNames.get(info.packageName);
                 info.size = packageStats.cacheSize + packageStats.externalCacheSize;
-                sysCaches.add(info);
-                totalSize += info.size;
+                if (info.size > 0) {
+                    sysCaches.add(info);
+                    totalSize += info.size;
+                }
                 callback.onProgress(totalCount, scanCount, info.packageName);
             }
 
             if (scanCount == totalCount) {
                 JunkInfo info = new JunkInfo();
-                info.name = "系统缓存";
+                info.name = ContextUtil.getString(R.string.system_cache);
                 info.size = totalSize;
+                Collections.sort(sysCaches);
+                Collections.reverse(sysCaches);
                 info.children = sysCaches;
                 info.isVisible = true;
+                info.isChild = false;
 
                 ArrayList<JunkInfo> list = new ArrayList<>();
                 list.add(info);
