@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,10 @@ public class JunkCleanActivity extends AppCompatActivity {
     private BaseExpandableListAdapter adapter;
     private Hashtable<Integer, JunkGroup> junkGroups = null;
 
+    private Button cleanBtn;
+
+    ListHeaderView headerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,7 @@ public class JunkCleanActivity extends AppCompatActivity {
                     case MSG_SYS_CACHE_BEGIN:
                         break;
                     case MSG_SYS_CACHE_POS:
+                        headerView.setProgress(((JunkInfo) msg.obj).packageName);
                         break;
                     case MSG_SYS_CACHE_FINISH:
                         isSysCacheScanFinish = true;
@@ -74,9 +80,20 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
         };
 
+        cleanBtn = (Button) findViewById(R.id.do_junk_clean);
+        cleanBtn.setEnabled(false);
+        cleanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAll();
+            }
+        });
+
         resetState();
 
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.junk_list);
+        headerView = new ListHeaderView(this);
+        listView.addHeaderView(headerView);
         listView.setGroupIndicator(null);
         listView.setChildIndicator(null);
         listView.setDividerHeight(0);
@@ -212,14 +229,6 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
-        Button cleanBtn = (Button) findViewById(R.id.do_junk_clean);
-        cleanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearAll();
-            }
-        });
-
         if (!isScanning) {
             isScanning = true;
             startScan();
@@ -244,6 +253,8 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         junkGroups = new Hashtable<>();
 
+        cleanBtn.setEnabled(false);
+
         JunkGroup cacheGroup = new JunkGroup();
         cacheGroup.name = ContextUtil.getString(R.string.system_cache);
         cacheGroup.children = new ArrayList<>();
@@ -251,6 +262,7 @@ public class JunkCleanActivity extends AppCompatActivity {
     }
 
     private void checkScanFinish() {
+
         if (isSysCacheScanFinish) {
             isScanning = false;
             Toast.makeText(this, "扫描完成", Toast.LENGTH_LONG).show();
@@ -266,6 +278,10 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
             children = null;
 
+            long totalSize = cacheGroup.size;
+            headerView.setSize(CleanUtil.formatShortFileSize(this, totalSize));
+
+            cleanBtn.setEnabled(true);
             adapter.notifyDataSetChanged();
         }
     }
@@ -291,8 +307,10 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onProgress(int total, int pos, String msg) {
-
+            public void onProgress(JunkInfo info) {
+                Message msg = handler.obtainMessage(MSG_SYS_CACHE_POS);
+                msg.obj = info;
+                msg.sendToTarget();
             }
 
             @Override

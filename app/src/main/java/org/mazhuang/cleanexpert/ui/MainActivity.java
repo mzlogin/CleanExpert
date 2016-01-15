@@ -17,7 +17,6 @@ import org.mazhuang.cleanexpert.util.ContextUtil;
 public class MainActivity extends AppCompatActivity {
 
     Button junkClean;
-    Button processClean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

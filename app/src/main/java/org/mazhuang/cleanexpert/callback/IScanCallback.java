@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public interface IScanCallback {
     public void onBegin();
 
-    public void onProgress(int total, int pos, String msg);
+    public void onProgress(JunkInfo info);
 
     public void onFinish(ArrayList<JunkInfo> children);
 }

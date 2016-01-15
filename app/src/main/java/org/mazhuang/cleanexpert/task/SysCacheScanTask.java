@@ -89,7 +89,7 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
                     sysCaches.add(info);
                     totalSize += info.size;
                 }
-                callback.onProgress(totalCount, scanCount, info.packageName);
+                callback.onProgress(info);
             }
 
             if (scanCount == totalCount) {
