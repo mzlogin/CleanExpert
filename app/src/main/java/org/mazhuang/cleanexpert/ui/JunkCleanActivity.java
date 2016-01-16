@@ -175,13 +175,10 @@ public class JunkCleanActivity extends AppCompatActivity {
                 } else {
                     holder = (GroupViewHolder)convertView.getTag();
                 }
-                convertView.setBackgroundColor(Color.rgb(0x61, 0xb2, 0x96));
 
                 JunkGroup group = junkGroups.get(groupPosition);
                 holder.packageNameTv.setText(group.name);
                 holder.packageSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, group.size));
-
-                convertView.setPadding(20, 0, 20, 0);
 
                 return convertView;
             }
@@ -205,14 +202,6 @@ public class JunkCleanActivity extends AppCompatActivity {
 
                     holder.junkTypeTv.setText(info.name);
                     holder.junkSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, info.size));
-
-                    if (info.isChild) {
-                        convertView.setPadding(100, 0, 20, 0);
-                        convertView.setBackgroundColor(Color.rgb(0xff, 0xff, 0xff));
-                    } else {
-                        convertView.setPadding(60, 0, 20, 0);
-                        convertView.setBackgroundColor(Color.rgb(0xe0, 0xd8, 0xb8));
-                    }
                 } else {
                     convertView = LayoutInflater.from(JunkCleanActivity.this)
                             .inflate(R.layout.item_null, null);
