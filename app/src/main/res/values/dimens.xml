@@ -5,6 +5,11 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!--- For ExpandableListView -->
-    <dimen name="item_top_margin">5dp</dimen>
-    <dimen name="item_leftright_padding">5dp</dimen>
+    <dimen name="group_right_padding">12dp</dimen>
+    <dimen name="item_top_margin">6dp</dimen>
+    <dimen name="item_horizontal_margin">6dp</dimen>
+    <dimen name="item_horizontal_padding">6dp</dimen>
+    <dimen name="item_level2_left_padding">12dp</dimen>
+
+    <dimen name="btn_margin">12dp</dimen>
 </resources>

@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="junk_clean">垃圾清理</string>
     <string name="process_clean">手机加速</string>
+    <string name="cache_clean">缓存垃圾</string>
     <string name="system_cache">系统缓存</string>
     <string name="title_activity_junk_clean">建议清理</string>
     <string name="do_junk_clean">清理</string>

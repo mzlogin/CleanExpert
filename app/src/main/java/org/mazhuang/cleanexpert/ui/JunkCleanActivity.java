@@ -1,18 +1,17 @@
 package org.mazhuang.cleanexpert.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +65,7 @@ public class JunkCleanActivity extends AppCompatActivity {
                     case MSG_SYS_CACHE_BEGIN:
                         break;
                     case MSG_SYS_CACHE_POS:
-                        headerView.setProgress(((JunkInfo) msg.obj).packageName);
+                        headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
                         break;
                     case MSG_SYS_CACHE_FINISH:
                         isSysCacheScanFinish = true;
@@ -93,6 +92,7 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.junk_list);
         headerView = new ListHeaderView(this);
+        headerView.tvProgress.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
         listView.addHeaderView(headerView);
         listView.setGroupIndicator(null);
         listView.setChildIndicator(null);
@@ -189,16 +189,16 @@ public class JunkCleanActivity extends AppCompatActivity {
 
                 if (info.isVisible) {
                     ChildViewHolder holder;
-                    if (convertView == null || convertView.getTag() == null) {
+                    if (info.isChild) {
                         convertView = LayoutInflater.from(JunkCleanActivity.this)
-                                .inflate(R.layout.item_list, null);
-                        holder = new ChildViewHolder();
-                        holder.junkTypeTv = (TextView) convertView.findViewById(R.id.tv_junk_type);
-                        holder.junkSizeTv = (TextView) convertView.findViewById(R.id.tv_junk_size);
-                        convertView.setTag(holder);
+                                .inflate(R.layout.level2_item_list, null);
                     } else {
-                        holder = (ChildViewHolder) convertView.getTag();
+                        convertView = LayoutInflater.from(JunkCleanActivity.this)
+                                .inflate(R.layout.level1_item_list, null);
                     }
+                    holder = new ChildViewHolder();
+                    holder.junkTypeTv = (TextView) convertView.findViewById(R.id.tv_junk_type);
+                    holder.junkSizeTv = (TextView) convertView.findViewById(R.id.tv_junk_size);
 
                     holder.junkTypeTv.setText(info.name);
                     holder.junkSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, info.size));
@@ -245,7 +245,7 @@ public class JunkCleanActivity extends AppCompatActivity {
         cleanBtn.setEnabled(false);
 
         JunkGroup cacheGroup = new JunkGroup();
-        cacheGroup.name = ContextUtil.getString(R.string.system_cache);
+        cacheGroup.name = ContextUtil.getString(R.string.cache_clean);
         cacheGroup.children = new ArrayList<>();
         junkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
     }
@@ -254,7 +254,6 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         if (isSysCacheScanFinish) {
             isScanning = false;
-            Toast.makeText(this, "扫描完成", Toast.LENGTH_LONG).show();
 
             JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
             ArrayList<JunkInfo> children = cacheGroup.children;
@@ -267,8 +266,11 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
             children = null;
 
-            long totalSize = cacheGroup.size;
-            headerView.setSize(CleanUtil.formatShortFileSize(this, totalSize));
+            long size = cacheGroup.size;
+            String totalSize = CleanUtil.formatShortFileSize(this, size);
+            headerView.tvSize.setText(totalSize);
+            headerView.tvProgress.setText("共发现:" + totalSize);
+            headerView.tvProgress.setGravity(Gravity.CENTER);
 
             cleanBtn.setEnabled(true);
             adapter.notifyDataSetChanged();

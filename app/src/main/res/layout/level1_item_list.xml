@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingLeft="@dimen/item_horizontal_margin"
+    android:paddingRight="@dimen/item_horizontal_margin"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:background="@android:color/white"
         android:layout_marginTop="@dimen/item_top_margin"
         android:paddingLeft="@dimen/item_horizontal_padding"
-        android:paddingRight="@dimen/group_right_padding"
+        android:paddingRight="@dimen/item_horizontal_padding"
         android:orientation="horizontal">
 
-        <TextView android:id="@+id/tv_package_name"
+        <TextView android:id="@+id/tv_junk_type"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
@@ -24,7 +25,7 @@
             android:gravity="center_vertical|left"
             android:text="@null"/>
 
-        <TextView android:id="@+id/tv_package_size"
+        <TextView android:id="@+id/tv_junk_size"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

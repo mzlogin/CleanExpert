@@ -11,9 +11,13 @@
 
     <Button
         android:id="@+id/do_junk_clean"
+        android:layout_marginLeft="@dimen/btn_margin"
+        android:layout_marginRight="@dimen/btn_margin"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="@color/material_deep_teal_500"
+        android:textColor="@android:color/white"
         android:text="@string/do_junk_clean" />
 
     <ExpandableListView

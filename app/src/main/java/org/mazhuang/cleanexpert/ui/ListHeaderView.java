@@ -10,8 +10,8 @@ import org.mazhuang.cleanexpert.R;
 
 public class ListHeaderView extends RelativeLayout {
     private Context context;
-    private TextView tvSize;
-    private TextView tvProgress;
+    public TextView tvSize;
+    public TextView tvProgress;
 
     public ListHeaderView(Context context) {
         super(context);
@@ -20,17 +20,5 @@ public class ListHeaderView extends RelativeLayout {
         addView(view);
         tvSize = (TextView) findViewById(R.id.tv_total_size);
         tvProgress = (TextView) findViewById(R.id.tv_progress_msg);
-    }
-
-    public void setSize(String text) {
-        tvSize.setText(text);
-    }
-
-    public void setProgress(String text) {
-        tvProgress.setText(text);
-    }
-
-    public void setSizeColor(int color) {
-        tvSize.setTextColor(color);
     }
 }
