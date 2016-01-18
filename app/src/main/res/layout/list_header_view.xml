@@ -2,18 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="140dp"
     android:background="@color/colorHeaderMain">
-
-    <TextView android:id="@+id/tv_total_size"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:textSize="60sp"
-        android:textColor="@android:color/white"
-        android:text="@null" />
 
     <TextView android:id="@+id/tv_progress_msg"
         android:layout_width="match_parent"
@@ -25,4 +15,16 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:text="@null" />
+
+    <TextView android:id="@+id/tv_total_size"
+        android:layout_above="@id/tv_progress_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="60sp"
+        android:textColor="@android:color/white"
+        android:text="@null" />
+
 </RelativeLayout>

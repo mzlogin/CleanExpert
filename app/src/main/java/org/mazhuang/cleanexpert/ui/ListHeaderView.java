@@ -3,6 +3,7 @@ package org.mazhuang.cleanexpert.ui;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,10 +14,10 @@ public class ListHeaderView extends RelativeLayout {
     public TextView tvSize;
     public TextView tvProgress;
 
-    public ListHeaderView(Context context) {
+    public ListHeaderView(Context context, ViewGroup listView) {
         super(context);
         this.context = context;
-        View view = LayoutInflater.from(this.context).inflate(R.layout.list_header_view, null);
+        View view = LayoutInflater.from(this.context).inflate(R.layout.list_header_view, listView, false);
         addView(view);
         tvSize = (TextView) findViewById(R.id.tv_total_size);
         tvProgress = (TextView) findViewById(R.id.tv_progress_msg);

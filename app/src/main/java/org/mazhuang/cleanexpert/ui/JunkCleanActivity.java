@@ -25,7 +25,7 @@ import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 public class JunkCleanActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class JunkCleanActivity extends AppCompatActivity {
     private boolean isScanning = false;
 
     private BaseExpandableListAdapter adapter;
-    private Hashtable<Integer, JunkGroup> junkGroups = null;
+    private HashMap<Integer, JunkGroup> junkGroups = null;
 
     private Button cleanBtn;
 
@@ -66,6 +66,7 @@ public class JunkCleanActivity extends AppCompatActivity {
                         break;
                     case MSG_SYS_CACHE_POS:
                         headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
+                        headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
                         break;
                     case MSG_SYS_CACHE_FINISH:
                         isSysCacheScanFinish = true;
@@ -92,7 +93,7 @@ public class JunkCleanActivity extends AppCompatActivity {
         resetState();
 
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.junk_list);
-        headerView = new ListHeaderView(this);
+        headerView = new ListHeaderView(this, listView);
         headerView.tvProgress.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         listView.addHeaderView(headerView);
         listView.setGroupIndicator(null);
@@ -241,7 +242,7 @@ public class JunkCleanActivity extends AppCompatActivity {
         isSysCacheScanFinish = false;
         isSysCacheCleanFinish = false;
 
-        junkGroups = new Hashtable<>();
+        junkGroups = new HashMap<>();
 
         cleanBtn.setEnabled(false);
 
@@ -320,6 +321,14 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
         });
         sysCacheScanTask.execute();
+    }
+
+    private long getTotalSize() {
+        long size = 0L;
+        for (JunkGroup group : junkGroups.values()) {
+            size += group.size;
+        }
+        return size;
     }
 
     public static class GroupViewHolder {
