@@ -84,6 +84,7 @@ public class JunkCleanActivity extends AppCompatActivity {
         cleanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cleanBtn.setEnabled(false);
                 clearAll();
             }
         });
@@ -92,7 +93,7 @@ public class JunkCleanActivity extends AppCompatActivity {
 
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.junk_list);
         headerView = new ListHeaderView(this);
-        headerView.tvProgress.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
+        headerView.tvProgress.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         listView.addHeaderView(headerView);
         listView.setGroupIndicator(null);
         listView.setChildIndicator(null);
@@ -279,7 +280,8 @@ public class JunkCleanActivity extends AppCompatActivity {
 
     private void checkCleanFinish() {
         if (isSysCacheCleanFinish) {
-            Toast.makeText(this, "清理完成", Toast.LENGTH_LONG).show();
+            headerView.tvProgress.setText("清理完成");
+            headerView.tvSize.setText(CleanUtil.formatShortFileSize(this, 0L));
 
             JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
             cacheGroup.size = 0L;
