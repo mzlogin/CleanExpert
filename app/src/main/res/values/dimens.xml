@@ -12,4 +12,6 @@
     <dimen name="item_level2_left_padding">12dp</dimen>
 
     <dimen name="btn_margin">12dp</dimen>
+
+    <dimen name="imgbtn_padding">40dp</dimen>
 </resources>
