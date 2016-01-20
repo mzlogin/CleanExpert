@@ -19,6 +19,7 @@ import org.mazhuang.cleanexpert.R;
 import org.mazhuang.cleanexpert.callback.IScanCallback;
 import org.mazhuang.cleanexpert.model.JunkGroup;
 import org.mazhuang.cleanexpert.model.JunkInfo;
+import org.mazhuang.cleanexpert.task.ProcessScanTask;
 import org.mazhuang.cleanexpert.task.SysCacheScanTask;
 import org.mazhuang.cleanexpert.util.CleanUtil;
 import org.mazhuang.cleanexpert.util.ContextUtil;
@@ -33,12 +34,20 @@ public class JunkCleanActivity extends AppCompatActivity {
     public static final int MSG_SYS_CACHE_POS = 0x1002;
     public static final int MSG_SYS_CACHE_FINISH = 0x1003;
 
+    public static final int MSG_PROCESS_BEGIN = 0x1011;
+    public static final int MSG_PROCESS_POS = 0x1012;
+    public static final int MSG_PROCESS_FINISH = 0x1013;
+
     public static final int MSG_SYS_CACHE_CLEAN_FINISH = 0x1100;
+    public static final int MSG_PROCESS_CLEAN_FINISH = 0x1101;
 
     private Handler handler;
 
     private boolean isSysCacheScanFinish = false;
     private boolean isSysCacheCleanFinish = false;
+
+    private boolean isProcessScanFinish = false;
+    private boolean isProcessCleanFinish = false;
 
     private boolean isScanning = false;
 
@@ -64,16 +73,37 @@ public class JunkCleanActivity extends AppCompatActivity {
                 switch (msg.what) {
                     case MSG_SYS_CACHE_BEGIN:
                         break;
+
                     case MSG_SYS_CACHE_POS:
                         headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
                         headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
                         break;
+
                     case MSG_SYS_CACHE_FINISH:
                         isSysCacheScanFinish = true;
                         checkScanFinish();
                         break;
+
                     case MSG_SYS_CACHE_CLEAN_FINISH:
                         isSysCacheCleanFinish = true;
+                        checkCleanFinish();
+                        break;
+
+                    case MSG_PROCESS_BEGIN:
+                        break;
+
+                    case MSG_PROCESS_POS:
+                        headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
+                        headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
+                        break;
+
+                    case MSG_PROCESS_FINISH:
+                        isProcessScanFinish = true;
+                        checkScanFinish();
+                        break;
+
+                    case MSG_PROCESS_CLEAN_FINISH:
+                        isProcessCleanFinish = true;
                         checkCleanFinish();
                         break;
                 }
@@ -230,6 +260,13 @@ public class JunkCleanActivity extends AppCompatActivity {
         Thread clearThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                JunkGroup processGroup = junkGroups.get(JunkGroup.GROUP_PROCESS);
+                for (JunkInfo info : processGroup.children) {
+                    CleanUtil.killAppProcesses(info.packageName);
+                }
+                Message msg = handler.obtainMessage(JunkCleanActivity.MSG_PROCESS_CLEAN_FINISH);
+                msg.sendToTarget();
+
                 CleanUtil.freeAllAppsCache(handler);
             }
         });
@@ -242,6 +279,9 @@ public class JunkCleanActivity extends AppCompatActivity {
         isSysCacheScanFinish = false;
         isSysCacheCleanFinish = false;
 
+        isProcessScanFinish = false;
+        isProcessCleanFinish = false;
+
         junkGroups = new HashMap<>();
 
         cleanBtn.setEnabled(false);
@@ -250,11 +290,18 @@ public class JunkCleanActivity extends AppCompatActivity {
         cacheGroup.name = ContextUtil.getString(R.string.cache_clean);
         cacheGroup.children = new ArrayList<>();
         junkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
+
+        JunkGroup processGroup = new JunkGroup();
+        processGroup.name = ContextUtil.getString(R.string.process_clean);
+        processGroup.children = new ArrayList<>();
+        junkGroups.put(JunkGroup.GROUP_PROCESS, processGroup);
     }
 
     private void checkScanFinish() {
 
-        if (isSysCacheScanFinish) {
+        adapter.notifyDataSetChanged();
+
+        if (isProcessScanFinish && isSysCacheScanFinish) {
             isScanning = false;
 
             JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
@@ -268,31 +315,59 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
             children = null;
 
-            long size = cacheGroup.size;
+            long size = getTotalSize();
             String totalSize = CleanUtil.formatShortFileSize(this, size);
             headerView.tvSize.setText(totalSize);
             headerView.tvProgress.setText("共发现:" + totalSize);
             headerView.tvProgress.setGravity(Gravity.CENTER);
 
             cleanBtn.setEnabled(true);
-            adapter.notifyDataSetChanged();
         }
     }
 
     private void checkCleanFinish() {
-        if (isSysCacheCleanFinish) {
+        if (isProcessCleanFinish && isSysCacheCleanFinish) {
             headerView.tvProgress.setText("清理完成");
             headerView.tvSize.setText(CleanUtil.formatShortFileSize(this, 0L));
 
-            JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
-            cacheGroup.size = 0L;
-            cacheGroup.children = null;
+            for (JunkGroup group : junkGroups.values()) {
+                group.size = 0L;
+                group.children = null;
+            }
 
             adapter.notifyDataSetChanged();
         }
     }
 
     private void startScan() {
+
+        ProcessScanTask processScanTask = new ProcessScanTask(new IScanCallback() {
+            @Override
+            public void onBegin() {
+                Message msg = handler.obtainMessage(MSG_PROCESS_BEGIN);
+                msg.sendToTarget();
+            }
+
+            @Override
+            public void onProgress(JunkInfo info) {
+                Message msg = handler.obtainMessage(MSG_PROCESS_POS);
+                msg.obj = info;
+                msg.sendToTarget();
+            }
+
+            @Override
+            public void onFinish(ArrayList<JunkInfo> children) {
+                JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_PROCESS);
+                cacheGroup.children.addAll(children);
+                for (JunkInfo info : children) {
+                    cacheGroup.size += info.size;
+                }
+                Message msg = handler.obtainMessage(MSG_PROCESS_FINISH);
+                msg.sendToTarget();
+            }
+        });
+        processScanTask.execute();
+
         SysCacheScanTask sysCacheScanTask = new SysCacheScanTask(new IScanCallback() {
             @Override
             public void onBegin() {

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "壮哥出品，不坑不行。http://mazhuang.org", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

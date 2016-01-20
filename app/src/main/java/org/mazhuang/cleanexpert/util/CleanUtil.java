@@ -1,5 +1,6 @@
 package org.mazhuang.cleanexpert.util;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
@@ -114,5 +115,15 @@ public class CleanUtil {
             }
         }
         return file.delete();
+    }
+
+    public static void killAppProcesses(String packageName) {
+        if (packageName == null || packageName.isEmpty()) {
+            return;
+        }
+
+        ActivityManager am = (ActivityManager)ContextUtil.applicationContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        am.killBackgroundProcesses(packageName);
     }
 }

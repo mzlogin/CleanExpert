@@ -8,7 +8,6 @@
     tools:context="org.mazhuang.cleanexpert.ui.JunkCleanActivity"
     tools:showIn="@layout/activity_junk_clean">
 
-
     <Button
         android:id="@+id/do_junk_clean"
         android:layout_marginLeft="@dimen/btn_margin"
@@ -16,8 +15,9 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/material_deep_teal_500"
+        android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
+        android:elevation="1dp"
         android:text="@string/do_junk_clean" />
 
     <ExpandableListView

@@ -4,7 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorHeaderMain">#FF3333</color>
-    <color name="colorHeaderProgress">#FF6666</color>
     <color name="colorLevel2ItemBackground">#FCFCFC</color>
 </resources>
