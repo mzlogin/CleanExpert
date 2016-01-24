@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"></uses-permission>
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"></uses-permission>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 
     <application
         android:allowBackup="true"

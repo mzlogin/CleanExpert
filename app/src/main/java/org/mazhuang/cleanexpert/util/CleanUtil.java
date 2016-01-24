@@ -10,11 +10,14 @@ import android.os.Message;
 import android.os.RemoteException;
 
 import org.mazhuang.cleanexpert.R;
+import org.mazhuang.cleanexpert.model.JunkGroup;
+import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.ui.JunkCleanActivity;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -125,5 +128,19 @@ public class CleanUtil {
         ActivityManager am = (ActivityManager)ContextUtil.applicationContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(packageName);
+    }
+
+    public static void freeJunkInfos(ArrayList<JunkInfo> junks, final Handler handler) {
+        for (JunkInfo info : junks) {
+            File file = new File(info.path);
+            if (file != null && file.exists()) {
+                file.delete();
+            }
+        }
+
+        junks = null;
+
+        Message msg = handler.obtainMessage(JunkCleanActivity.MSG_OVERALL_CLEAN_FINISH);
+        msg.sendToTarget();
     }
 }

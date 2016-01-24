@@ -14,6 +14,8 @@
         android:layout_alignParentBottom="true"
         android:textColor="@android:color/white"
         android:textSize="14sp"
+        android:ellipsize="middle"
+        android:singleLine="true"
         android:text="@null" />
 
     <TextView android:id="@+id/tv_total_size"

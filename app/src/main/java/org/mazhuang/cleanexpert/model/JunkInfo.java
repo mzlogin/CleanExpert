@@ -13,7 +13,7 @@ public class JunkInfo implements Comparable<JunkInfo> {
     public long size;
     public String packageName;
     public String path;
-    public ArrayList<JunkInfo> children;
+    public ArrayList<JunkInfo> children = new ArrayList<>();
     public boolean isVisible = false;
     public boolean isChild = true;
 
