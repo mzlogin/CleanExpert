@@ -49,23 +49,23 @@ public class JunkCleanActivity extends AppCompatActivity {
 
     private Handler handler;
 
-    private boolean isSysCacheScanFinish = false;
-    private boolean isSysCacheCleanFinish = false;
+    private boolean mIsSysCacheScanFinish = false;
+    private boolean mIsSysCacheCleanFinish = false;
 
-    private boolean isProcessScanFinish = false;
-    private boolean isProcessCleanFinish = false;
+    private boolean mIsProcessScanFinish = false;
+    private boolean mIsProcessCleanFinish = false;
 
-    private boolean isOverallScanFinish = false;
-    private boolean isOverallCleanFinish = false;
+    private boolean mIsOverallScanFinish = false;
+    private boolean mIsOverallCleanFinish = false;
 
-    private boolean isScanning = false;
+    private boolean mIsScanning = false;
 
-    private BaseExpandableListAdapter adapter;
-    private HashMap<Integer, JunkGroup> junkGroups = null;
+    private BaseExpandableListAdapter mAdapter;
+    private HashMap<Integer, JunkGroup> mJunkGroups = null;
 
-    private Button cleanBtn;
+    private Button mCleanButton;
 
-    ListHeaderView headerView;
+    private ListHeaderView mHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,17 +84,17 @@ public class JunkCleanActivity extends AppCompatActivity {
                         break;
 
                     case MSG_SYS_CACHE_POS:
-                        headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
-                        headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
+                        mHeaderView.mProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).mPackageName);
+                        mHeaderView.mSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
                         break;
 
                     case MSG_SYS_CACHE_FINISH:
-                        isSysCacheScanFinish = true;
+                        mIsSysCacheScanFinish = true;
                         checkScanFinish();
                         break;
 
                     case MSG_SYS_CACHE_CLEAN_FINISH:
-                        isSysCacheCleanFinish = true;
+                        mIsSysCacheCleanFinish = true;
                         checkCleanFinish();
                         break;
 
@@ -102,17 +102,17 @@ public class JunkCleanActivity extends AppCompatActivity {
                         break;
 
                     case MSG_PROCESS_POS:
-                        headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).packageName);
-                        headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
+                        mHeaderView.mProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).mPackageName);
+                        mHeaderView.mSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
                         break;
 
                     case MSG_PROCESS_FINISH:
-                        isProcessScanFinish = true;
+                        mIsProcessScanFinish = true;
                         checkScanFinish();
                         break;
 
                     case MSG_PROCESS_CLEAN_FINISH:
-                        isProcessCleanFinish = true;
+                        mIsProcessCleanFinish = true;
                         checkCleanFinish();
                         break;
 
@@ -120,29 +120,29 @@ public class JunkCleanActivity extends AppCompatActivity {
                         break;
 
                     case MSG_OVERALL_POS:
-                        headerView.tvProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).path);
-                        headerView.tvSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
+                        mHeaderView.mProgress.setText("正在扫描:" + ((JunkInfo) msg.obj).mPath);
+                        mHeaderView.mSize.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, getTotalSize()));
                         break;
 
                     case MSG_OVERALL_FINISH:
-                        isOverallScanFinish = true;
+                        mIsOverallScanFinish = true;
                         checkScanFinish();
                         break;
 
                     case MSG_OVERALL_CLEAN_FINISH:
-                        isOverallCleanFinish = true;
+                        mIsOverallCleanFinish = true;
                         checkCleanFinish();
                         break;
                 }
             }
         };
 
-        cleanBtn = (Button) findViewById(R.id.do_junk_clean);
-        cleanBtn.setEnabled(false);
-        cleanBtn.setOnClickListener(new View.OnClickListener() {
+        mCleanButton = (Button) findViewById(R.id.do_junk_clean);
+        mCleanButton.setEnabled(false);
+        mCleanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cleanBtn.setEnabled(false);
+                mCleanButton.setEnabled(false);
                 clearAll();
             }
         });
@@ -150,47 +150,47 @@ public class JunkCleanActivity extends AppCompatActivity {
         resetState();
 
         ExpandableListView listView = (ExpandableListView) findViewById(R.id.junk_list);
-        headerView = new ListHeaderView(this, listView);
-        headerView.tvProgress.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        listView.addHeaderView(headerView);
+        mHeaderView = new ListHeaderView(this, listView);
+        mHeaderView.mProgress.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        listView.addHeaderView(mHeaderView);
         listView.setGroupIndicator(null);
         listView.setChildIndicator(null);
         listView.setDividerHeight(0);
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                JunkInfo info = (JunkInfo)adapter.getChild(groupPosition, childPosition);
+                JunkInfo info = (JunkInfo) mAdapter.getChild(groupPosition, childPosition);
                 if (groupPosition == JunkGroup.GROUP_APK ||
-                        info.isChild ||
-                        (groupPosition == JunkGroup.GROUP_ADV && !info.isChild && info.path != null)) {
-                    if (info.path != null) {
-                        Toast.makeText(JunkCleanActivity.this, info.path, Toast.LENGTH_SHORT).show();
+                        info.mIsChild ||
+                        (groupPosition == JunkGroup.GROUP_ADV && !info.mIsChild && info.mPath != null)) {
+                    if (info.mPath != null) {
+                        Toast.makeText(JunkCleanActivity.this, info.mPath, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    int childrenInThisGroup = adapter.getChildrenCount(groupPosition);
+                    int childrenInThisGroup = mAdapter.getChildrenCount(groupPosition);
                     for (int i = childPosition + 1; i < childrenInThisGroup; i++) {
-                        JunkInfo child = (JunkInfo)adapter.getChild(groupPosition, i);
-                        if (!child.isChild) {
+                        JunkInfo child = (JunkInfo) mAdapter.getChild(groupPosition, i);
+                        if (!child.mIsChild) {
                             break;
                         }
 
-                        child.isVisible = !child.isVisible;
+                        child.mIsVisible = !child.mIsVisible;
                     }
-                    adapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                 }
                 return false;
             }
         });
-        adapter = new BaseExpandableListAdapter() {
+        mAdapter = new BaseExpandableListAdapter() {
             @Override
             public int getGroupCount() {
-                return junkGroups.size();
+                return mJunkGroups.size();
             }
 
             @Override
             public int getChildrenCount(int groupPosition) {
-                if (junkGroups.get(groupPosition).children != null) {
-                    return junkGroups.get(groupPosition).children.size();
+                if (mJunkGroups.get(groupPosition).mChildren != null) {
+                    return mJunkGroups.get(groupPosition).mChildren.size();
                 } else {
                     return 0;
                 }
@@ -198,12 +198,12 @@ public class JunkCleanActivity extends AppCompatActivity {
 
             @Override
             public Object getGroup(int groupPosition) {
-                return junkGroups.get(groupPosition);
+                return mJunkGroups.get(groupPosition);
             }
 
             @Override
             public Object getChild(int groupPosition, int childPosition) {
-                return junkGroups.get(groupPosition).children.get(childPosition);
+                return mJunkGroups.get(groupPosition).mChildren.get(childPosition);
             }
 
             @Override
@@ -228,27 +228,27 @@ public class JunkCleanActivity extends AppCompatActivity {
                     convertView = LayoutInflater.from(JunkCleanActivity.this)
                             .inflate(R.layout.group_list, null);
                     holder = new GroupViewHolder();
-                    holder.packageNameTv = (TextView)convertView.findViewById(R.id.tv_package_name);
-                    holder.packageSizeTv = (TextView)convertView.findViewById(R.id.tv_package_size);
+                    holder.mPackageNameTv = (TextView)convertView.findViewById(R.id.package_name);
+                    holder.mPackageSizeTv = (TextView)convertView.findViewById(R.id.package_size);
                     convertView.setTag(holder);
                 } else {
                     holder = (GroupViewHolder)convertView.getTag();
                 }
 
-                JunkGroup group = junkGroups.get(groupPosition);
-                holder.packageNameTv.setText(group.name);
-                holder.packageSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, group.size));
+                JunkGroup group = mJunkGroups.get(groupPosition);
+                holder.mPackageNameTv.setText(group.mName);
+                holder.mPackageSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, group.mSize));
 
                 return convertView;
             }
 
             @Override
             public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-                JunkInfo info = junkGroups.get(groupPosition).children.get(childPosition);
+                JunkInfo info = mJunkGroups.get(groupPosition).mChildren.get(childPosition);
 
-                if (info.isVisible) {
+                if (info.mIsVisible) {
                     ChildViewHolder holder;
-                    if (info.isChild) {
+                    if (info.mIsChild) {
                         convertView = LayoutInflater.from(JunkCleanActivity.this)
                                 .inflate(R.layout.level2_item_list, null);
                     } else {
@@ -256,11 +256,11 @@ public class JunkCleanActivity extends AppCompatActivity {
                                 .inflate(R.layout.level1_item_list, null);
                     }
                     holder = new ChildViewHolder();
-                    holder.junkTypeTv = (TextView) convertView.findViewById(R.id.tv_junk_type);
-                    holder.junkSizeTv = (TextView) convertView.findViewById(R.id.tv_junk_size);
+                    holder.mJunkTypeTv = (TextView) convertView.findViewById(R.id.junk_type);
+                    holder.mJunkSizeTv = (TextView) convertView.findViewById(R.id.junk_size);
 
-                    holder.junkTypeTv.setText(info.name);
-                    holder.junkSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, info.size));
+                    holder.mJunkTypeTv.setText(info.name);
+                    holder.mJunkSizeTv.setText(CleanUtil.formatShortFileSize(JunkCleanActivity.this, info.mSize));
                 } else {
                     convertView = LayoutInflater.from(JunkCleanActivity.this)
                             .inflate(R.layout.item_null, null);
@@ -275,10 +275,10 @@ public class JunkCleanActivity extends AppCompatActivity {
             }
         };
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(mAdapter);
 
-        if (!isScanning) {
-            isScanning = true;
+        if (!mIsScanning) {
+            mIsScanning = true;
             startScan();
         }
     }
@@ -287,9 +287,9 @@ public class JunkCleanActivity extends AppCompatActivity {
         Thread clearThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                JunkGroup processGroup = junkGroups.get(JunkGroup.GROUP_PROCESS);
-                for (JunkInfo info : processGroup.children) {
-                    CleanUtil.killAppProcesses(info.packageName);
+                JunkGroup processGroup = mJunkGroups.get(JunkGroup.GROUP_PROCESS);
+                for (JunkInfo info : processGroup.mChildren) {
+                    CleanUtil.killAppProcesses(info.mPackageName);
                 }
                 Message msg = handler.obtainMessage(JunkCleanActivity.MSG_PROCESS_CLEAN_FINISH);
                 msg.sendToTarget();
@@ -297,14 +297,14 @@ public class JunkCleanActivity extends AppCompatActivity {
                 CleanUtil.freeAllAppsCache(handler);
 
                 ArrayList<JunkInfo> junks = new ArrayList<>();
-                JunkGroup group = junkGroups.get(JunkGroup.GROUP_APK);
-                junks.addAll(group.children);
+                JunkGroup group = mJunkGroups.get(JunkGroup.GROUP_APK);
+                junks.addAll(group.mChildren);
 
-                group = junkGroups.get(JunkGroup.GROUP_LOG);
-                junks.addAll(group.children);
+                group = mJunkGroups.get(JunkGroup.GROUP_LOG);
+                junks.addAll(group.mChildren);
 
-                group = junkGroups.get(JunkGroup.GROUP_TMP);
-                junks.addAll(group.children);
+                group = mJunkGroups.get(JunkGroup.GROUP_TMP);
+                junks.addAll(group.mChildren);
 
                 CleanUtil.freeJunkInfos(junks, handler);
             }
@@ -313,83 +313,83 @@ public class JunkCleanActivity extends AppCompatActivity {
     }
 
     private void resetState() {
-        isScanning = false;
+        mIsScanning = false;
 
-        isSysCacheScanFinish = false;
-        isSysCacheCleanFinish = false;
+        mIsSysCacheScanFinish = false;
+        mIsSysCacheCleanFinish = false;
 
-        isProcessScanFinish = false;
-        isProcessCleanFinish = false;
+        mIsProcessScanFinish = false;
+        mIsProcessCleanFinish = false;
 
-        junkGroups = new HashMap<>();
+        mJunkGroups = new HashMap<>();
 
-        cleanBtn.setEnabled(false);
+        mCleanButton.setEnabled(false);
 
         JunkGroup cacheGroup = new JunkGroup();
-        cacheGroup.name = ContextUtil.getString(R.string.cache_clean);
-        cacheGroup.children = new ArrayList<>();
-        junkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
+        cacheGroup.mName = ContextUtil.getString(R.string.cache_clean);
+        cacheGroup.mChildren = new ArrayList<>();
+        mJunkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
 
         JunkGroup processGroup = new JunkGroup();
-        processGroup.name = ContextUtil.getString(R.string.process_clean);
-        processGroup.children = new ArrayList<>();
-        junkGroups.put(JunkGroup.GROUP_PROCESS, processGroup);
+        processGroup.mName = ContextUtil.getString(R.string.process_clean);
+        processGroup.mChildren = new ArrayList<>();
+        mJunkGroups.put(JunkGroup.GROUP_PROCESS, processGroup);
 
         JunkGroup apkGroup = new JunkGroup();
-        apkGroup.name = ContextUtil.getString(R.string.apk_clean);
-        apkGroup.children = new ArrayList<>();
-        junkGroups.put(JunkGroup.GROUP_APK, apkGroup);
+        apkGroup.mName = ContextUtil.getString(R.string.apk_clean);
+        apkGroup.mChildren = new ArrayList<>();
+        mJunkGroups.put(JunkGroup.GROUP_APK, apkGroup);
 
         JunkGroup tmpGroup = new JunkGroup();
-        tmpGroup.name = ContextUtil.getString(R.string.tmp_clean);
-        tmpGroup.children = new ArrayList<>();
-        junkGroups.put(JunkGroup.GROUP_TMP, tmpGroup);
+        tmpGroup.mName = ContextUtil.getString(R.string.tmp_clean);
+        tmpGroup.mChildren = new ArrayList<>();
+        mJunkGroups.put(JunkGroup.GROUP_TMP, tmpGroup);
 
         JunkGroup logGroup = new JunkGroup();
-        logGroup.name = ContextUtil.getString(R.string.log_clean);
-        logGroup.children = new ArrayList<>();
-        junkGroups.put(JunkGroup.GROUP_LOG, logGroup);
+        logGroup.mName = ContextUtil.getString(R.string.log_clean);
+        logGroup.mChildren = new ArrayList<>();
+        mJunkGroups.put(JunkGroup.GROUP_LOG, logGroup);
     }
 
     private void checkScanFinish() {
 
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
-        if (isProcessScanFinish && isSysCacheScanFinish && isOverallScanFinish) {
-            isScanning = false;
+        if (mIsProcessScanFinish && mIsSysCacheScanFinish && mIsOverallScanFinish) {
+            mIsScanning = false;
 
-            JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
-            ArrayList<JunkInfo> children = cacheGroup.children;
-            cacheGroup.children = new ArrayList<>();
+            JunkGroup cacheGroup = mJunkGroups.get(JunkGroup.GROUP_CACHE);
+            ArrayList<JunkInfo> children = cacheGroup.mChildren;
+            cacheGroup.mChildren = new ArrayList<>();
             for (JunkInfo info : children) {
-                cacheGroup.children.add(info);
-                if (info.children != null) {
-                    cacheGroup.children.addAll(info.children);
+                cacheGroup.mChildren.add(info);
+                if (info.mChildren != null) {
+                    cacheGroup.mChildren.addAll(info.mChildren);
                 }
             }
             children = null;
 
             long size = getTotalSize();
             String totalSize = CleanUtil.formatShortFileSize(this, size);
-            headerView.tvSize.setText(totalSize);
-            headerView.tvProgress.setText("共发现:" + totalSize);
-            headerView.tvProgress.setGravity(Gravity.CENTER);
+            mHeaderView.mSize.setText(totalSize);
+            mHeaderView.mProgress.setText("共发现:" + totalSize);
+            mHeaderView.mProgress.setGravity(Gravity.CENTER);
 
-            cleanBtn.setEnabled(true);
+            mCleanButton.setEnabled(true);
         }
     }
 
     private void checkCleanFinish() {
-        if (isProcessCleanFinish && isSysCacheCleanFinish && isOverallCleanFinish) {
-            headerView.tvProgress.setText("清理完成");
-            headerView.tvSize.setText(CleanUtil.formatShortFileSize(this, 0L));
+        if (mIsProcessCleanFinish && mIsSysCacheCleanFinish && mIsOverallCleanFinish) {
+            mHeaderView.mProgress.setText("清理完成");
+            mHeaderView.mSize.setText(CleanUtil.formatShortFileSize(this, 0L));
 
-            for (JunkGroup group : junkGroups.values()) {
-                group.size = 0L;
-                group.children = null;
+            for (JunkGroup group : mJunkGroups.values()) {
+                group.mSize = 0L;
+                group.mChildren = null;
             }
 
-            adapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -411,10 +411,10 @@ public class JunkCleanActivity extends AppCompatActivity {
 
             @Override
             public void onFinish(ArrayList<JunkInfo> children) {
-                JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_PROCESS);
-                cacheGroup.children.addAll(children);
+                JunkGroup cacheGroup = mJunkGroups.get(JunkGroup.GROUP_PROCESS);
+                cacheGroup.mChildren.addAll(children);
                 for (JunkInfo info : children) {
-                    cacheGroup.size += info.size;
+                    cacheGroup.mSize += info.mSize;
                 }
                 Message msg = handler.obtainMessage(MSG_PROCESS_FINISH);
                 msg.sendToTarget();
@@ -438,12 +438,12 @@ public class JunkCleanActivity extends AppCompatActivity {
 
             @Override
             public void onFinish(ArrayList<JunkInfo> children) {
-                JunkGroup cacheGroup = junkGroups.get(JunkGroup.GROUP_CACHE);
-                cacheGroup.children.addAll(children);
-                Collections.sort(cacheGroup.children);
-                Collections.reverse(cacheGroup.children);
+                JunkGroup cacheGroup = mJunkGroups.get(JunkGroup.GROUP_CACHE);
+                cacheGroup.mChildren.addAll(children);
+                Collections.sort(cacheGroup.mChildren);
+                Collections.reverse(cacheGroup.mChildren);
                 for (JunkInfo info : children) {
-                    cacheGroup.size += info.size;
+                    cacheGroup.mSize += info.mSize;
                 }
                 Message msg = handler.obtainMessage(MSG_SYS_CACHE_FINISH);
                 msg.sendToTarget();
@@ -468,7 +468,7 @@ public class JunkCleanActivity extends AppCompatActivity {
             @Override
             public void onFinish(ArrayList<JunkInfo> children) {
                 for (JunkInfo info : children) {
-                    String path = info.children.get(0).path;
+                    String path = info.mChildren.get(0).mPath;
                     int groupFlag = 0;
                     if (path.endsWith(".apk")) {
                         groupFlag = JunkGroup.GROUP_APK;
@@ -478,9 +478,9 @@ public class JunkCleanActivity extends AppCompatActivity {
                         groupFlag = JunkGroup.GROUP_TMP;
                     }
 
-                    JunkGroup cacheGroup = junkGroups.get(groupFlag);
-                    cacheGroup.children.addAll(info.children);
-                    cacheGroup.size = info.size;
+                    JunkGroup cacheGroup = mJunkGroups.get(groupFlag);
+                    cacheGroup.mChildren.addAll(info.mChildren);
+                    cacheGroup.mSize = info.mSize;
                 }
 
                 Message msg = handler.obtainMessage(MSG_OVERALL_FINISH);
@@ -492,19 +492,19 @@ public class JunkCleanActivity extends AppCompatActivity {
 
     private long getTotalSize() {
         long size = 0L;
-        for (JunkGroup group : junkGroups.values()) {
-            size += group.size;
+        for (JunkGroup group : mJunkGroups.values()) {
+            size += group.mSize;
         }
         return size;
     }
 
     public static class GroupViewHolder {
-        public TextView packageNameTv;
-        public TextView packageSizeTv;
+        public TextView mPackageNameTv;
+        public TextView mPackageSizeTv;
     }
 
     public static class ChildViewHolder {
-        public TextView junkTypeTv;
-        public TextView junkSizeTv;
+        public TextView mJunkTypeTv;
+        public TextView mJunkSizeTv;
     }
 }

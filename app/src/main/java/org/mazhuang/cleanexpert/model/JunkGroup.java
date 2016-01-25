@@ -14,7 +14,7 @@ public class JunkGroup {
     public static final int GROUP_ADV = 5;
     public static final int GROUP_APPLEFT = 6;
 
-    public String name;
-    public long size;
-    public ArrayList<JunkInfo> children;
+    public String mName;
+    public long mSize;
+    public ArrayList<JunkInfo> mChildren;
 }

@@ -10,16 +10,16 @@ import android.widget.TextView;
 import org.mazhuang.cleanexpert.R;
 
 public class ListHeaderView extends RelativeLayout {
-    private Context context;
-    public TextView tvSize;
-    public TextView tvProgress;
+    private Context mContext;
+    public TextView mSize;
+    public TextView mProgress;
 
     public ListHeaderView(Context context, ViewGroup listView) {
         super(context);
-        this.context = context;
-        View view = LayoutInflater.from(this.context).inflate(R.layout.list_header_view, listView, false);
+        this.mContext = context;
+        View view = LayoutInflater.from(this.mContext).inflate(R.layout.list_header_view, listView, false);
         addView(view);
-        tvSize = (TextView) findViewById(R.id.tv_total_size);
-        tvProgress = (TextView) findViewById(R.id.tv_progress_msg);
+        mSize = (TextView) findViewById(R.id.total_size);
+        mProgress = (TextView) findViewById(R.id.progress_msg);
     }
 }

@@ -10,12 +10,12 @@ import java.util.ArrayList;
  */
 public class JunkInfo implements Comparable<JunkInfo> {
     public String name;
-    public long size;
-    public String packageName;
-    public String path;
-    public ArrayList<JunkInfo> children = new ArrayList<>();
-    public boolean isVisible = false;
-    public boolean isChild = true;
+    public long mSize;
+    public String mPackageName;
+    public String mPath;
+    public ArrayList<JunkInfo> mChildren = new ArrayList<>();
+    public boolean mIsVisible = false;
+    public boolean mIsChild = true;
 
     @Override
     public int compareTo(JunkInfo another) {
@@ -29,9 +29,9 @@ public class JunkInfo implements Comparable<JunkInfo> {
             return -1;
         }
 
-        if (this.size > another.size) {
+        if (this.mSize > another.mSize) {
             return 1;
-        } else if (this.size < another.size) {
+        } else if (this.mSize < another.mSize) {
             return -1;
         } else {
             return 0;

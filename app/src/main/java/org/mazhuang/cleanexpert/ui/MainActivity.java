@@ -16,7 +16,7 @@ import org.mazhuang.cleanexpert.util.ContextUtil;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button junkClean;
+    Button mJunkCleanButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ContextUtil.applicationContext = this.getApplicationContext();
+        ContextUtil.sApplicationContext = this.getApplicationContext();
 
-        junkClean = (Button) findViewById(R.id.junk_clean);
-        junkClean.setOnClickListener(new View.OnClickListener() {
+        mJunkCleanButton = (Button) findViewById(R.id.junk_clean);
+        mJunkCleanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, JunkCleanActivity.class);

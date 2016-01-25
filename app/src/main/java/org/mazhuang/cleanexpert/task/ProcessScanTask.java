@@ -38,21 +38,21 @@ public class ProcessScanTask extends AsyncTask<Void, Void, Void> {
 
         for (AndroidAppProcess process : processes) {
             JunkInfo info = new JunkInfo();
-            info.isChild = false;
-            info.isVisible = true;
-            info.packageName = process.getPackageName();
+            info.mIsChild = false;
+            info.mIsVisible = true;
+            info.mPackageName = process.getPackageName();
 
             try {
                 Statm statm = process.statm();
-                info.size = statm.getResidentSetSize();
+                info.mSize = statm.getResidentSetSize();
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
             }
 
             try {
-                PackageManager pm = ContextUtil.applicationContext.getPackageManager();
-                PackageInfo packageInfo = process.getPackageInfo(ContextUtil.applicationContext, 0);
+                PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
+                PackageInfo packageInfo = process.getPackageInfo(ContextUtil.sApplicationContext, 0);
                 info.name = packageInfo.applicationInfo.loadLabel(pm).toString();
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();

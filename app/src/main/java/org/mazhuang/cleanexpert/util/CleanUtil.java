@@ -10,7 +10,6 @@ import android.os.Message;
 import android.os.RemoteException;
 
 import org.mazhuang.cleanexpert.R;
-import org.mazhuang.cleanexpert.model.JunkGroup;
 import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.ui.JunkCleanActivity;
 
@@ -30,25 +29,25 @@ public class CleanUtil {
         }
 
         float result = number;
-        int suffix = R.string.byteShort;
+        int suffix = R.string.byte_short;
         if (result > 900) {
-            suffix = R.string.kilobyteShort;
+            suffix = R.string.kilo_byte_short;
             result = result / 1024;
         }
         if (result > 900) {
-            suffix = R.string.megabyteShort;
+            suffix = R.string.mega_byte_short;
             result = result / 1024;
         }
         if (result > 900) {
-            suffix = R.string.gigabyteShort;
+            suffix = R.string.giga_byte_short;
             result = result / 1024;
         }
         if (result > 900) {
-            suffix = R.string.terabyteShort;
+            suffix = R.string.tera_byte_short;
             result = result / 1024;
         }
         if (result > 900) {
-            suffix = R.string.petabyteShort;
+            suffix = R.string.peta_byte_short;
             result = result / 1024;
         }
         String value;
@@ -68,7 +67,7 @@ public class CleanUtil {
 
     public static void freeAllAppsCache(final Handler handler) {
 
-        Context context = ContextUtil.applicationContext;
+        Context context = ContextUtil.sApplicationContext;
 
         File externalDir = context.getExternalCacheDir();
         if (externalDir == null) {
@@ -125,14 +124,14 @@ public class CleanUtil {
             return;
         }
 
-        ActivityManager am = (ActivityManager)ContextUtil.applicationContext
+        ActivityManager am = (ActivityManager)ContextUtil.sApplicationContext
                 .getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(packageName);
     }
 
     public static void freeJunkInfos(ArrayList<JunkInfo> junks, final Handler handler) {
         for (JunkInfo info : junks) {
-            File file = new File(info.path);
+            File file = new File(info.mPath);
             if (file != null && file.exists()) {
                 file.delete();
             }

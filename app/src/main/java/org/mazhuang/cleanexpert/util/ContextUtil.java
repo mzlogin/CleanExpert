@@ -6,13 +6,13 @@ import android.content.Context;
  * Created by mazhuang on 16/1/14.
  */
 public class ContextUtil {
-    public static Context applicationContext;
+    public static Context sApplicationContext;
 
     /**
      * 获取 resource id 对应的字符串
      * @param resId R.string.xxx
      */
     public static String getString(int resId) {
-        return applicationContext.getResources().getString(resId);
+        return sApplicationContext.getResources().getString(resId);
     }
 }

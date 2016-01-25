@@ -24,33 +24,33 @@ import java.util.List;
  */
 public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
 
-    private IScanCallback callback;
-    private int scanCount;
-    private int totalCount;
-    private ArrayList<JunkInfo> sysCaches;
-    private HashMap<String, String> appNames;
-    private long totalSize = 0L;
+    private IScanCallback mCallback;
+    private int mScanCount;
+    private int mTotalCount;
+    private ArrayList<JunkInfo> mSysCaches;
+    private HashMap<String, String> mAppNames;
+    private long mTotalSize = 0L;
 
     public SysCacheScanTask(IScanCallback callback) {
-        this.callback = callback;
+        this.mCallback = callback;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        callback.onBegin();
-        PackageManager pm = ContextUtil.applicationContext.getPackageManager();
+        mCallback.onBegin();
+        PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
         List<ApplicationInfo> installedPackages = pm.getInstalledApplications(PackageManager.GET_GIDS);
 
         IPackageStatsObserver.Stub observer = new PackageStatsObserver();
 
-        scanCount = 0;
-        totalCount = installedPackages.size();
-        sysCaches = new ArrayList<JunkInfo>();
-        appNames = new HashMap<String, String>();
+        mScanCount = 0;
+        mTotalCount = installedPackages.size();
+        mSysCaches = new ArrayList<JunkInfo>();
+        mAppNames = new HashMap<String, String>();
 
-        for (int i = 0; i < totalCount; i++) {
+        for (int i = 0; i < mTotalCount; i++) {
             ApplicationInfo info = installedPackages.get(i);
-            appNames.put(info.packageName, pm.getApplicationLabel(info).toString());
+            mAppNames.put(info.packageName, pm.getApplicationLabel(info).toString());
             getPackageInfo(info.packageName, observer);
         }
 
@@ -59,7 +59,7 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
 
     public void getPackageInfo(String packageName, IPackageStatsObserver.Stub observer) {
         try {
-            PackageManager pm = ContextUtil.applicationContext.getPackageManager();
+            PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
             Method getPackageSizeInfo = pm.getClass()
                     .getMethod("getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
@@ -78,33 +78,33 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
         @Override
         public void onGetStatsCompleted(PackageStats packageStats, boolean succeeded)
                 throws RemoteException {
-            scanCount++;
+            mScanCount++;
             if (packageStats == null || !succeeded) {
             } else {
                 JunkInfo info = new JunkInfo();
-                info.packageName = packageStats.packageName;
-                info.name = appNames.get(info.packageName);
-                info.size = packageStats.cacheSize + packageStats.externalCacheSize;
-                if (info.size > 0) {
-                    sysCaches.add(info);
-                    totalSize += info.size;
+                info.mPackageName = packageStats.packageName;
+                info.name = mAppNames.get(info.mPackageName);
+                info.mSize = packageStats.cacheSize + packageStats.externalCacheSize;
+                if (info.mSize > 0) {
+                    mSysCaches.add(info);
+                    mTotalSize += info.mSize;
                 }
-                callback.onProgress(info);
+                mCallback.onProgress(info);
             }
 
-            if (scanCount == totalCount) {
+            if (mScanCount == mTotalCount) {
                 JunkInfo info = new JunkInfo();
                 info.name = ContextUtil.getString(R.string.system_cache);
-                info.size = totalSize;
-                Collections.sort(sysCaches);
-                Collections.reverse(sysCaches);
-                info.children = sysCaches;
-                info.isVisible = true;
-                info.isChild = false;
+                info.mSize = mTotalSize;
+                Collections.sort(mSysCaches);
+                Collections.reverse(mSysCaches);
+                info.mChildren = mSysCaches;
+                info.mIsVisible = true;
+                info.mIsChild = false;
 
                 ArrayList<JunkInfo> list = new ArrayList<>();
                 list.add(info);
-                callback.onFinish(list);
+                mCallback.onFinish(list);
             }
         }
     }

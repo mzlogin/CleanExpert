@@ -5,21 +5,21 @@
     android:layout_height="140dp"
     android:background="?attr/colorPrimary">
 
-    <TextView android:id="@+id/tv_progress_msg"
+    <TextView android:id="@+id/progress_msg"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:paddingLeft="10dp"
         android:gravity="center_vertical"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/primary_dark"
         android:layout_alignParentBottom="true"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:ellipsize="middle"
         android:singleLine="true"
-        android:text="@null" />
+        android:text="等待扫描" />
 
-    <TextView android:id="@+id/tv_total_size"
-        android:layout_above="@id/tv_progress_msg"
+    <TextView android:id="@+id/total_size"
+        android:layout_above="@id/progress_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -27,6 +27,6 @@
         android:gravity="center"
         android:textSize="60sp"
         android:textColor="@android:color/white"
-        android:text="@null" />
+        android:text="0.00B" />
 
 </RelativeLayout>

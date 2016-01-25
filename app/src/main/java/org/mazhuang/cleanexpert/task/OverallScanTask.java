@@ -5,7 +5,6 @@ import android.os.Environment;
 
 import org.mazhuang.cleanexpert.callback.IScanCallback;
 import org.mazhuang.cleanexpert.model.JunkInfo;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,32 +39,32 @@ public class OverallScanTask extends AsyncTask<Void, Void, Void> {
                 JunkInfo info = null;
                 if (name.endsWith(".apk")) {
                     info = new JunkInfo();
-                    info.size = file.length();
+                    info.mSize = file.length();
                     // TODO 解析出 apk 文件详细内容
                     info.name = name;
-                    info.path = file.getAbsolutePath();
-                    info.isChild = false;
-                    info.isVisible = true;
-                    mApkInfo.children.add(info);
-                    mApkInfo.size += info.size;
+                    info.mPath = file.getAbsolutePath();
+                    info.mIsChild = false;
+                    info.mIsVisible = true;
+                    mApkInfo.mChildren.add(info);
+                    mApkInfo.mSize += info.mSize;
                 } else if (name.endsWith(".log")) {
                     info = new JunkInfo();
-                    info.size = file.length();
+                    info.mSize = file.length();
                     info.name = name;
-                    info.path = file.getAbsolutePath();
-                    info.isChild = false;
-                    info.isVisible = true;
-                    mLogInfo.children.add(info);
-                    mLogInfo.size += info.size;
+                    info.mPath = file.getAbsolutePath();
+                    info.mIsChild = false;
+                    info.mIsVisible = true;
+                    mLogInfo.mChildren.add(info);
+                    mLogInfo.mSize += info.mSize;
                 } else if (name.endsWith(".tmp") || name.endsWith(".temp")) {
                     info = new JunkInfo();
-                    info.size = file.length();
+                    info.mSize = file.length();
                     info.name = name;
-                    info.path = file.getAbsolutePath();
-                    info.isChild = false;
-                    info.isVisible = true;
-                    mTmpInfo.children.add(info);
-                    mTmpInfo.size += info.size;
+                    info.mPath = file.getAbsolutePath();
+                    info.mIsChild = false;
+                    info.mIsVisible = true;
+                    mTmpInfo.mChildren.add(info);
+                    mTmpInfo.mSize += info.mSize;
                 }
 
                 if (info != null) {
@@ -90,21 +89,21 @@ public class OverallScanTask extends AsyncTask<Void, Void, Void> {
 
         ArrayList<JunkInfo> list = new ArrayList<>();
 
-        if (mApkInfo.size > 0L) {
-            Collections.sort(mApkInfo.children);
-            Collections.reverse(mApkInfo.children);
+        if (mApkInfo.mSize > 0L) {
+            Collections.sort(mApkInfo.mChildren);
+            Collections.reverse(mApkInfo.mChildren);
             list.add(mApkInfo);
         }
 
-        if (mLogInfo.size > 0L) {
-            Collections.sort(mLogInfo.children);
-            Collections.reverse(mLogInfo.children);
+        if (mLogInfo.mSize > 0L) {
+            Collections.sort(mLogInfo.mChildren);
+            Collections.reverse(mLogInfo.mChildren);
             list.add(mLogInfo);
         }
 
-        if (mTmpInfo.size > 0L) {
-            Collections.sort(mTmpInfo.children);
-            Collections.reverse(mTmpInfo.children);
+        if (mTmpInfo.mSize > 0L) {
+            Collections.sort(mTmpInfo.mChildren);
+            Collections.reverse(mTmpInfo.mChildren);
             list.add(mTmpInfo);
         }
 
