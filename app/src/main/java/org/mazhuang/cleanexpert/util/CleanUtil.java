@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -85,6 +86,7 @@ public class CleanUtil {
             }
         }
 
+        boolean hanged = true;
         try {
             Method freeStorageAndNotify = pm.getClass()
                     .getMethod("freeStorageAndNotify", long.class, IPackageDataObserver.class);
@@ -97,12 +99,21 @@ public class CleanUtil {
                     msg.sendToTarget();
                 }
             });
+            hanged = false;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        }
+
+        if (hanged) {
+            Message msg = handler.obtainMessage(JunkCleanActivity.MSG_SYS_CACHE_CLEAN_FINISH);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(JunkCleanActivity.HANG_FLAG, true);
+            msg.setData(bundle);
+            msg.sendToTarget();
         }
     }
 

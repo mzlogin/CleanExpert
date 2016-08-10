@@ -47,6 +47,8 @@ public class JunkCleanActivity extends AppCompatActivity {
     public static final int MSG_PROCESS_CLEAN_FINISH = 0x1101;
     public static final int MSG_OVERALL_CLEAN_FINISH = 0x1102;
 
+    public static final String HANG_FLAG = "hanged";
+
     private Handler handler;
 
     private boolean mIsSysCacheScanFinish = false;
@@ -96,6 +98,14 @@ public class JunkCleanActivity extends AppCompatActivity {
                     case MSG_SYS_CACHE_CLEAN_FINISH:
                         mIsSysCacheCleanFinish = true;
                         checkCleanFinish();
+                        Bundle bundle = msg.getData();
+                        if (bundle != null) {
+                            boolean hanged = bundle.getBoolean(HANG_FLAG, false);
+                            if (hanged) {
+                                Toast.makeText(JunkCleanActivity.this, "清理系统缓存出现异常！", Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        }
                         break;
 
                     case MSG_PROCESS_BEGIN:
