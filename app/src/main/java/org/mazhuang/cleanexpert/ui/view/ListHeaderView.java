@@ -1,4 +1,4 @@
-package org.mazhuang.cleanexpert.ui;
+package org.mazhuang.cleanexpert.ui.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;

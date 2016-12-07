@@ -3,7 +3,6 @@ package org.mazhuang.cleanexpert.ui;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.task.OverallScanTask;
 import org.mazhuang.cleanexpert.task.ProcessScanTask;
 import org.mazhuang.cleanexpert.task.SysCacheScanTask;
+import org.mazhuang.cleanexpert.ui.view.ListHeaderView;
 import org.mazhuang.cleanexpert.util.CleanUtil;
 import org.mazhuang.cleanexpert.util.ContextUtil;
 
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class JunkCleanActivity extends AppCompatActivity {
+public class JunkCleanActivity extends BaseActivity {
 
     public static final int MSG_SYS_CACHE_BEGIN = 0x1001;
     public static final int MSG_SYS_CACHE_POS = 0x1002;
