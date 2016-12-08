@@ -8,9 +8,9 @@ import java.util.ArrayList;
  * Created by mazhuang on 16/1/14.
  */
 public interface IScanCallback {
-    public void onBegin();
+    void onBegin();
 
-    public void onProgress(JunkInfo info);
+    void onProgress(JunkInfo info);
 
-    public void onFinish(ArrayList<JunkInfo> children);
+    void onFinish(ArrayList<JunkInfo> children);
 }

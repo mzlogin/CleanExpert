@@ -7,10 +7,10 @@ import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.RemoteException;
 
+import org.mazhuang.cleanexpert.MyApplication;
 import org.mazhuang.cleanexpert.R;
 import org.mazhuang.cleanexpert.callback.IScanCallback;
 import org.mazhuang.cleanexpert.model.JunkInfo;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,15 +38,15 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         mCallback.onBegin();
-        PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
+        PackageManager pm = MyApplication.getInstance().getPackageManager();
         List<ApplicationInfo> installedPackages = pm.getInstalledApplications(PackageManager.GET_GIDS);
 
         IPackageStatsObserver.Stub observer = new PackageStatsObserver();
 
         mScanCount = 0;
         mTotalCount = installedPackages.size();
-        mSysCaches = new ArrayList<JunkInfo>();
-        mAppNames = new HashMap<String, String>();
+        mSysCaches = new ArrayList<>();
+        mAppNames = new HashMap<>();
 
         for (int i = 0; i < mTotalCount; i++) {
             ApplicationInfo info = installedPackages.get(i);
@@ -59,7 +59,7 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
 
     public void getPackageInfo(String packageName, IPackageStatsObserver.Stub observer) {
         try {
-            PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
+            PackageManager pm = MyApplication.getInstance().getPackageManager();
             Method getPackageSizeInfo = pm.getClass()
                     .getMethod("getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
@@ -94,7 +94,7 @@ public class SysCacheScanTask extends AsyncTask<Void, Void, Void> {
 
             if (mScanCount == mTotalCount) {
                 JunkInfo info = new JunkInfo();
-                info.name = ContextUtil.getString(R.string.system_cache);
+                info.name = MyApplication.getInstance().getString(R.string.system_cache);
                 info.mSize = mTotalSize;
                 Collections.sort(mSysCaches);
                 Collections.reverse(mSysCaches);

@@ -23,7 +23,6 @@ import org.mazhuang.cleanexpert.task.ProcessScanTask;
 import org.mazhuang.cleanexpert.task.SysCacheScanTask;
 import org.mazhuang.cleanexpert.ui.view.ListHeaderView;
 import org.mazhuang.cleanexpert.util.CleanUtil;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -336,27 +335,27 @@ public class JunkCleanActivity extends BaseActivity {
         mCleanButton.setEnabled(false);
 
         JunkGroup cacheGroup = new JunkGroup();
-        cacheGroup.mName = ContextUtil.getString(R.string.cache_clean);
+        cacheGroup.mName = getString(R.string.cache_clean);
         cacheGroup.mChildren = new ArrayList<>();
         mJunkGroups.put(JunkGroup.GROUP_CACHE, cacheGroup);
 
         JunkGroup processGroup = new JunkGroup();
-        processGroup.mName = ContextUtil.getString(R.string.process_clean);
+        processGroup.mName = getString(R.string.process_clean);
         processGroup.mChildren = new ArrayList<>();
         mJunkGroups.put(JunkGroup.GROUP_PROCESS, processGroup);
 
         JunkGroup apkGroup = new JunkGroup();
-        apkGroup.mName = ContextUtil.getString(R.string.apk_clean);
+        apkGroup.mName = getString(R.string.apk_clean);
         apkGroup.mChildren = new ArrayList<>();
         mJunkGroups.put(JunkGroup.GROUP_APK, apkGroup);
 
         JunkGroup tmpGroup = new JunkGroup();
-        tmpGroup.mName = ContextUtil.getString(R.string.tmp_clean);
+        tmpGroup.mName = getString(R.string.tmp_clean);
         tmpGroup.mChildren = new ArrayList<>();
         mJunkGroups.put(JunkGroup.GROUP_TMP, tmpGroup);
 
         JunkGroup logGroup = new JunkGroup();
-        logGroup.mName = ContextUtil.getString(R.string.log_clean);
+        logGroup.mName = getString(R.string.log_clean);
         logGroup.mChildren = new ArrayList<>();
         mJunkGroups.put(JunkGroup.GROUP_LOG, logGroup);
     }

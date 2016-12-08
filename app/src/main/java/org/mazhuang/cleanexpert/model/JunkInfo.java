@@ -1,7 +1,7 @@
 package org.mazhuang.cleanexpert.model;
 
+import org.mazhuang.cleanexpert.MyApplication;
 import org.mazhuang.cleanexpert.R;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class JunkInfo implements Comparable<JunkInfo> {
 
     @Override
     public int compareTo(JunkInfo another) {
-        String top = ContextUtil.getString(R.string.system_cache);
+        String top = MyApplication.getInstance().getString(R.string.system_cache);
 
         if (this.name != null && this.name.equals(top)) {
             return 1;

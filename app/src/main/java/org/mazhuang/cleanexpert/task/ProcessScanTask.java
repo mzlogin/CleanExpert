@@ -8,9 +8,9 @@ import com.jaredrummler.android.processes.ProcessManager;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.jaredrummler.android.processes.models.Statm;
 
+import org.mazhuang.cleanexpert.MyApplication;
 import org.mazhuang.cleanexpert.callback.IScanCallback;
 import org.mazhuang.cleanexpert.model.JunkInfo;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,8 +51,8 @@ public class ProcessScanTask extends AsyncTask<Void, Void, Void> {
             }
 
             try {
-                PackageManager pm = ContextUtil.sApplicationContext.getPackageManager();
-                PackageInfo packageInfo = process.getPackageInfo(ContextUtil.sApplicationContext, 0);
+                PackageManager pm = MyApplication.getInstance().getPackageManager();
+                PackageInfo packageInfo = process.getPackageInfo(MyApplication.getInstance(), 0);
                 info.name = packageInfo.applicationInfo.loadLabel(pm).toString();
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();

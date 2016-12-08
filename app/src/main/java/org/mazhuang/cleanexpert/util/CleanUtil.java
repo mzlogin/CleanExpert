@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 
+import org.mazhuang.cleanexpert.MyApplication;
 import org.mazhuang.cleanexpert.R;
 import org.mazhuang.cleanexpert.model.JunkInfo;
 import org.mazhuang.cleanexpert.ui.JunkCleanActivity;
@@ -68,7 +69,7 @@ public class CleanUtil {
 
     public static void freeAllAppsCache(final Handler handler) {
 
-        Context context = ContextUtil.sApplicationContext;
+        Context context = MyApplication.getInstance();
 
         File externalDir = context.getExternalCacheDir();
         if (externalDir == null) {
@@ -135,7 +136,7 @@ public class CleanUtil {
             return;
         }
 
-        ActivityManager am = (ActivityManager)ContextUtil.sApplicationContext
+        ActivityManager am = (ActivityManager)MyApplication.getInstance()
                 .getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(packageName);
     }
@@ -147,8 +148,6 @@ public class CleanUtil {
                 file.delete();
             }
         }
-
-        junks = null;
 
         Message msg = handler.obtainMessage(JunkCleanActivity.MSG_OVERALL_CLEAN_FINISH);
         msg.sendToTarget();

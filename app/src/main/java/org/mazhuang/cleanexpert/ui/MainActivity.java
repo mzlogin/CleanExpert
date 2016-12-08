@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import org.mazhuang.cleanexpert.R;
-import org.mazhuang.cleanexpert.util.ContextUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -32,8 +31,6 @@ public class MainActivity extends BaseActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        ContextUtil.sApplicationContext = this.getApplicationContext();
 
         mJunkCleanButton = (Button) findViewById(R.id.junk_clean);
         mJunkCleanButton.setOnClickListener(new View.OnClickListener() {
