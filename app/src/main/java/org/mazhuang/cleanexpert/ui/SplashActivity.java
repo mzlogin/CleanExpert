@@ -4,21 +4,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import org.mazhuang.cleanexpert.util.DiskStat;
+import org.mazhuang.cleanexpert.util.MemStat;
+
 public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: 这里的延时改为等待读取磁盘空间和内存信息完毕后切换到 MainActivity
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        final Handler handler = new Handler();
+
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                final DiskStat diskStat = new DiskStat();
+                final MemStat memStat = new MemStat(SplashActivity.this);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        intent.putExtra(MainActivity.PARAM_TOTAL_SPACE, diskStat.getTotalSpace());
+                        intent.putExtra(MainActivity.PARAM_USED_SPACE, diskStat.getUsedSpace());
+                        intent.putExtra(MainActivity.PARAM_TOTAL_MEMORY, memStat.getTotalMemory());
+                        intent.putExtra(MainActivity.PARAM_USED_MEMORY, memStat.getUsedMemory());
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
-        }, 1500);
+        });
+
+        thread.start();
     }
 }

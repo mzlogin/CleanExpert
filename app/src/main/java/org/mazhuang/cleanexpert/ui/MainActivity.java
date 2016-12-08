@@ -14,7 +14,12 @@ import org.mazhuang.cleanexpert.R;
 
 public class MainActivity extends BaseActivity {
 
-    Button mJunkCleanButton;
+    public static final String PARAM_TOTAL_SPACE = "total_space";
+    public static final String PARAM_USED_SPACE = "used_space";
+    public static final String PARAM_TOTAL_MEMORY = "total_memory";
+    public static final String PARAM_USED_MEMORY = "used_memory";
+
+    private Button mJunkCleanButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
